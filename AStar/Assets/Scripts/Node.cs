@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Node : MonoBehaviour
@@ -11,20 +12,27 @@ public class Node : MonoBehaviour
     [SerializeField] TextMeshProUGUI gCost;
     [SerializeField] TextMeshProUGUI hCost;
 
-    void Start()
+    Vector3Int worldPosition;
+    Vector2Int gridPosition;
+
+    private void Start()
     {
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     #region properties
     public void SetWorldLocation(string text)
     {
         worldLocation.SetText(text);
     }
+
+    public void SetHCost(string text)
+    {
+        hCost.SetText(text);
+    }
+
+    public Vector3Int WorldPosition { get => worldPosition; set => worldPosition = value; }
+    public Vector2Int GridPosition { get => gridPosition; set => gridPosition = value; }
     #endregion
 }

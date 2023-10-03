@@ -132,31 +132,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 394080368}
-  - component: {fileID: 394080367}
+  - component: {fileID: 394080369}
+  - component: {fileID: 394080370}
   m_Layer: 0
-  m_Name: PathFinding
+  m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &394080367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 394080366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ba46a707cf7ada4192c9b460bdc90f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nodePrefab: {fileID: 5763349088588934304, guid: dc96cecbe9b3c214b9b2afe2c9c9976a, type: 3}
-  height: 5
-  width: 5
-  cubeSize: 1
-  nodes: []
 --- !u!4 &394080368
 Transform:
   m_ObjectHideFlags: 0
@@ -172,6 +156,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &394080369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394080366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03766f38304f0124cb0b1729f311c89e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodePrefab: {fileID: 5763349088588934304, guid: dc96cecbe9b3c214b9b2afe2c9c9976a, type: 3}
+  height: 5
+  width: 5
+  cubeSize: 1
+  nodes: []
+  endPoint: {x: 0, y: 0, z: 0}
+--- !u!114 &394080370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394080366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ba46a707cf7ada4192c9b460bdc90f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  neigbours: []
+  grid: {fileID: 394080369}
+  start: {x: 0, y: 0, z: 0}
+  end: {x: 3, y: 0, z: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,8 +369,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.71092093, y: -0.0021131665, z: 0.0021358833, w: 0.70326555}
+  m_LocalPosition: {x: 1.7938464, y: 5.746386, z: 1.8799547}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
