@@ -8,122 +8,100 @@ using UnityEngine;
 public class AStar : MonoBehaviour
 {
     [SerializeField] List<Node> neighbours;
+    [SerializeField] List<Node> openList;
+    [SerializeField] List<Node> closeList;
     [SerializeField] Grids grid;
-    [SerializeField] Vector3Int start;
-    [SerializeField] Vector3Int end;
+    Node currentNode;
     Node startGoal;
     Node endGoal;
-    int index;
     private void Start()
     {
-        SetStartAndEndGoal();
-        //AddNeighbours(grid.ListOfNodes[12]);
-        AddNeighbours(grid.ListOfNodes[index]);
-        CalculateHCost();
-    }
 
-    private void SetStartAndEndGoal()
+    }
+    void FindPath(Vector3Int start, Vector3Int end)
     {
-        //setting the start goal and end goal by converting node world position to index
         startGoal = grid.GetNode(start);
         endGoal = grid.GetNode(end);
+        endGoal.gCost = 0;
+        endGoal.hCost = 0;
+        endGoal.wasVisited = false;
+        endGoal.parent = null;
+        //color the start and end
 
-        startGoal.gameObject.name = "start";
-        endGoal.gameObject.name = "end";
-        //color
-        startGoal.gameObject.GetComponent<Renderer>().material.color = Color.green;
-        endGoal.gameObject.GetComponent<Renderer>().material.color = Color.red;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        //startGoal.Mesh.GetComponent<Mesh>().material.color = Color.green;
+        //endGoal.gameObject.GetComponent<Renderer>().material.color = Color.red;
+        
+        openList.Add(startGoal);
+        while (openList.Count > 0)
         {
-            foreach (Node neighbour in neighbours)
-            {
-                neighbour.gameObject.GetComponent<Renderer>().material.color = Color.gray;
-            }
-            neighbours.Clear();
-            index++;
-            AddNeighbours(grid.ListOfNodes[index]);
+            //sorting the Fcost so that the current node will always be the the index 0 
+            //meaning that the lowest Fcost will always be the index 0
+            openList.Sort();
+            currentNode = openList[0];
+            openList.RemoveAt(0);
+            currentNode.wasVisited = true;
 
+            if (currentNode == endGoal)
+            {
+                return;
+            }
+
+            foreach (Node neighbour in GetNeighbours(currentNode))
+            {
+                if (closeList.Contains(neighbour))
+                {
+                    continue;
+                }
+
+                int newCost = currentNode.gCost + GetDistance(currentNode.GridPosition, neighbour.GridPosition);
+                if (newCost < neighbour.gCost || closeList.Contains(neighbour))
+                {
+                    neighbour.Fcost = newCost;
+                    neighbour.hCost = GetDistance(neighbour.GridPosition, endGoal.GridPosition);
+                    neighbour.parent = currentNode;
+
+                    if(!openList.Contains(neighbour))
+                    {
+                        openList.Add(neighbour);
+                    }
+                }
+            }
         }
     }
 
-    //void AddNeighbours()
-    //{
-    //    foreach (Node node in grid.ListOfNodes)
-    //    {
-
-    //        if ((int)node.transform.position.x + 1 < grid.gridWidth)
-    //        {
-    //            Node neighbourRight = grid.GetNode(new Vector3Int((int)node.transform.position.x + 1, (int)node.transform.position.y, (int)node.transform.position.z));
-    //            neighbours.Add(neighbourRight);
-    //        }
-
-    //        if ((int)node.transform.position.z + 1 < grid.gridHeight)
-    //        {
-    //            Node neighbourLeft = grid.GetNode(new Vector3Int((int)node.transform.position.x, (int)node.transform.position.y, (int)node.transform.position.z + 1));
-    //            neighbours.Add(neighbourLeft);
-    //        }
-
-    //        if ((int)node.transform.position.x - 1 > 0)
-    //        {
-    //            Node neighbourUp = grid.GetNode(new Vector3Int((int)node.transform.position.x - 1, (int)node.transform.position.y, (int)node.transform.position.z));
-    //            neighbours.Add(neighbourUp);
-    //        }
-
-    //        if ((int)node.transform.position.z - 1 > 0)
-    //        {
-    //            Node neighbourDown = grid.GetNode(new Vector3Int((int)node.transform.position.x, (int)node.transform.position.y, (int)node.transform.position.z - 1));
-    //            neighbours.Add((neighbourDown));
-    //        }
-    //    }
-    //}
-
-    void AddNeighbours(Node node)
+    List<Node> GetNeighbours(Node node)
     {
+        List<Node> listOfNeighbors = new List<Node>();
         if (node.GridPosition.x + 1 < grid.gridWidth)
         {
             Node neighbourRight = grid.GetNode(new Vector3Int(node.GridPosition.x + 1, 0, node.GridPosition.y));
-            neighbours.Add(neighbourRight);
+            listOfNeighbors.Add(neighbourRight);
         }
 
         if (node.GridPosition.y + 1 < grid.gridHeight)
         {
             Node neighbourLeft = grid.GetNode(new Vector3Int(node.GridPosition.x, 0, node.GridPosition.y + 1));
-            neighbours.Add(neighbourLeft);
+            listOfNeighbors.Add(neighbourLeft);
         }
 
         if (node.GridPosition.x - 1 >= 0)
         {
             Node neighbourUp = grid.GetNode(new Vector3Int(node.GridPosition.x - 1, 0, node.GridPosition.y));
-            neighbours.Add(neighbourUp);
+            listOfNeighbors.Add(neighbourUp);
         }
 
         if (node.GridPosition.y - 1 >= 0)
         {
             Node neighbourDown = grid.GetNode(new Vector3Int(node.GridPosition.x, 0, node.GridPosition.y - 1));
-            neighbours.Add((neighbourDown));
+            listOfNeighbors.Add((neighbourDown));
         }
-
-        neighbours.Add(node);
-        foreach (Node neighbour in neighbours)
-        {
-            neighbour.gameObject.GetComponent<Renderer>().material.color = Color.green;
-        }
-        node.gameObject.GetComponent<Renderer>().material.color = Color.green;
+        return listOfNeighbors;
     }
 
-    void CalculateHCost()
+    int GetDistance(Vector2Int position, Vector2Int destination)
     {
-        foreach (Node node in grid.ListOfNodes)
-        {
-            Vector2Int nodeDistance = node.GridPosition - endGoal.GridPosition;
-            float hCost = nodeDistance.x + nodeDistance.y;
-            node.SetHCost(hCost.ToString());
-        }
-        //subtract position of grid node 
-        //add the x and y 
+        Vector2Int nodeDistance = position - destination;
+        int distance = Mathf.RoundToInt(Mathf.Abs(nodeDistance.x) + Mathf.Abs(nodeDistance.y));
+        return distance;
     }
 }

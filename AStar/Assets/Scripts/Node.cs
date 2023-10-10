@@ -1,24 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Node : MonoBehaviour
+public class Node : IComparable
 {
     [Header("TMP")]
     [SerializeField] TextMeshProUGUI worldLocation;
-    [SerializeField] TextMeshProUGUI fCost;
-    [SerializeField] TextMeshProUGUI gCost;
-    [SerializeField] TextMeshProUGUI hCost;
-
+    [SerializeField] TextMeshProUGUI txtFcost;
+    [SerializeField] TextMeshProUGUI txtGcost;
+    [SerializeField] TextMeshProUGUI txtHcost;
+    public int hCost;
+    public int gCost;
+    public int fCost;
+    public bool wasVisited;
+    public Node parent;
     Vector3Int worldPosition;
     Vector2Int gridPosition;
-
-    private void Start()
-    {
-
-    }
 
 
     #region properties
@@ -27,10 +27,30 @@ public class Node : MonoBehaviour
         worldLocation.SetText(text);
     }
 
-    public void SetHCost(string text)
+    public int Fcost
     {
-        hCost.SetText(text);
+        get {
+            int newfcost = gCost + hCost;
+            fCost = newfcost;
+            return newfcost;
+        }
+        set { fCost = value; }
     }
+
+    public int CompareTo(object obj)
+    {
+        Node otherNode = (Node)obj;
+        if(fCost < otherNode.fCost)
+        {
+            return -1;
+        }else if(fCost > otherNode.fCost)
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
 
     public Vector3Int WorldPosition { get => worldPosition; set => worldPosition = value; }
     public Vector2Int GridPosition { get => gridPosition; set => gridPosition = value; }
