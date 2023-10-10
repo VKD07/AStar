@@ -30,6 +30,9 @@ public class AStar : MonoBehaviour
 
         startGoal.gameObject.name = "start";
         endGoal.gameObject.name = "end";
+        //color
+        startGoal.gameObject.GetComponent<Renderer>().material.color = Color.green;
+        endGoal.gameObject.GetComponent<Renderer>().material.color = Color.red;
     }
 
     private void Update()
@@ -109,7 +112,7 @@ public class AStar : MonoBehaviour
         {
             neighbour.gameObject.GetComponent<Renderer>().material.color = Color.green;
         }
-        node.gameObject.GetComponent<Renderer>().material.color = Color.red;
+        node.gameObject.GetComponent<Renderer>().material.color = Color.green;
     }
 
     void CalculateHCost()
