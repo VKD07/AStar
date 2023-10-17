@@ -13,33 +13,45 @@ public class AStar : MonoBehaviour
     Node currentNode;
     Node startGoal;
     Node endGoal;
-    public Vector3Int start, goal;
+    public Transform start, goal;
+    int version;
     private void Start()
     {
-
+        FindPath(start.position, goal.position);
     }
-
     private void Update()
     {
-        FindPath(start, goal);
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            openList.Clear();
+            path.Clear();
+            if (startGoal != null)
+            {
+                startGoal.wasVisited = false;
+            }
+            FindPath(start.position, goal.position);
+        }
     }
-    void FindPath(Vector3Int start, Vector3Int end)
+    void FindPath(Vector3 start, Vector3 end)
     {
-        startGoal = grid.GetNode(start);
-        endGoal = grid.GetNode(end);
+        startGoal = grid.GetNode(Vector3Int.FloorToInt(start));
+        endGoal = grid.GetNode(Vector3Int.FloorToInt(end));
+
+        //color the start and end
+        startGoal.gameObject.GetComponent<Renderer>().material.color = Color.blue;
+        endGoal.gameObject.GetComponent<Renderer>().material.color = Color.red;
+
+        //Reseting node
         endGoal.gCost = 0;
         endGoal.hCost = 0;
         endGoal.wasVisited = false;
         endGoal.parent = null;
-        //color the start and end
-        startGoal.gameObject.GetComponent<Renderer>().material.color = Color.blue;
-        endGoal.gameObject.GetComponent<Renderer>().material.color = Color.red;
-        //startGoal.Mesh.GetComponent<Mesh>().material.color = Color.green;
-        //endGoal.gameObject.GetComponent<Renderer>().material.color = Color.red;
 
         openList.Add(startGoal);
+
         while (openList.Count > 0)
         {
+
             //sorting the Fcost so that the current node will always be the the index 0 
             //meaning that the lowest Fcost will always be the index 0
             openList.Sort();
@@ -51,11 +63,17 @@ public class AStar : MonoBehaviour
             {
                 print("Success");
                 RetracePath(startGoal, endGoal);
+                version++;
                 return;
             }
 
             foreach (Node neighbour in GetNeighbours(currentNode))
             {
+                if (neighbour.nodeVersion < version)
+                {
+                    neighbour.ResetNodeValues();
+                    neighbour.nodeVersion = version;
+                }
                 if (neighbour.wasVisited)
                 {
                     continue;
@@ -122,9 +140,17 @@ public class AStar : MonoBehaviour
 
         foreach (Node node in path)
         {
-            node.gameObject.GetComponent<Renderer>().material.color = Color.black;
+            if (node == endGoal)
+            {
+                node.gameObject.GetComponent<Renderer>().material.color = Color.red;
+            }
+            else
+            {
+                node.gameObject.GetComponent<Renderer>().material.color = Color.black;
+            }
         }
     }
+
     int GetDistance(Vector2Int position, Vector2Int destination)
     {
         Vector2Int nodeDistance = position - destination;

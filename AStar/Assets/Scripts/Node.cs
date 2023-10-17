@@ -19,6 +19,8 @@ public class Node : MonoBehaviour, IComparable
     public Node parent;
     Vector3Int worldPosition;
     Vector2Int gridPosition;
+    public int nodeVersion;
+
 
 
     #region properties
@@ -37,6 +39,8 @@ public class Node : MonoBehaviour, IComparable
         set { fCost = value; }
     }
 
+    
+
     public int CompareTo(object obj)
     {
         Node otherNode = (Node)obj;
@@ -51,7 +55,14 @@ public class Node : MonoBehaviour, IComparable
         return 0;
     }
 
-
+    public void ResetNodeValues()
+    {
+        fCost = 0;
+        gCost = 0;
+        hCost = 0;
+        parent = null;
+        wasVisited = false;
+    }
     public Vector3Int WorldPosition { get => worldPosition; set => worldPosition = value; }
     public Vector2Int GridPosition { get => gridPosition; set => gridPosition = value; }
     #endregion
