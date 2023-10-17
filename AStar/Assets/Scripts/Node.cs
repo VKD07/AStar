@@ -5,7 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Node : IComparable
+public class Node : MonoBehaviour, IComparable
 {
     [Header("TMP")]
     [SerializeField] TextMeshProUGUI worldLocation;
@@ -40,10 +40,10 @@ public class Node : IComparable
     public int CompareTo(object obj)
     {
         Node otherNode = (Node)obj;
-        if(fCost < otherNode.fCost)
+        if(Fcost < otherNode.Fcost)
         {
             return -1;
-        }else if(fCost > otherNode.fCost)
+        }else if(Fcost > otherNode.Fcost)
         {
             return 1;
         }

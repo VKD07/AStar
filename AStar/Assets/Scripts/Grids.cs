@@ -11,6 +11,7 @@ public class Grids : MonoBehaviour
     [SerializeField] int cubeSize = 1;
     [SerializeField] List<Node> nodes;
     [SerializeField] Vector3 endPoint;
+    public List<Node> path;
 
     void Awake()
     {
@@ -29,6 +30,7 @@ public class Grids : MonoBehaviour
                 nodes.Add(nodeScript);
                 nodeScript.WorldPosition = pos;
                 nodeScript.GridPosition = new Vector2Int(pos.x, pos.z);
+                node.name = nodeScript.WorldPosition.ToString();
                 nodeScript.SetWorldLocation(pos.ToString());
             }
         }
