@@ -39,8 +39,6 @@ public class Node : MonoBehaviour, IComparable
         set { fCost = value; }
     }
 
-    
-
     public int CompareTo(object obj)
     {
         Node otherNode = (Node)obj;
@@ -62,6 +60,13 @@ public class Node : MonoBehaviour, IComparable
         hCost = 0;
         parent = null;
         wasVisited = false;
+    }
+
+    public void SetNodeTextCost(float gcost, float hcost)
+    {
+        txtFcost.SetText(Fcost.ToString());
+        txtHcost.SetText(hcost.ToString());
+        txtGcost.SetText(gcost.ToString());
     }
     public Vector3Int WorldPosition { get => worldPosition; set => worldPosition = value; }
     public Vector2Int GridPosition { get => gridPosition; set => gridPosition = value; }

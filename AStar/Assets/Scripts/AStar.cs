@@ -15,20 +15,17 @@ public class AStar : MonoBehaviour
     Node endGoal;
     public Transform start, goal;
     int version;
+
     private void Start()
     {
-        FindPath(start.position, goal.position);
     }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if(Input.GetKeyDown(KeyCode.Return))
         {
             openList.Clear();
             path.Clear();
-            if (startGoal != null)
-            {
-                startGoal.wasVisited = false;
-            }
             FindPath(start.position, goal.position);
         }
     }
@@ -39,7 +36,7 @@ public class AStar : MonoBehaviour
 
         //color the start and end
         startGoal.gameObject.GetComponent<Renderer>().material.color = Color.blue;
-        endGoal.gameObject.GetComponent<Renderer>().material.color = Color.red;
+        //endGoal.gameObject.GetComponent<Renderer>().material.color = Color.red;
 
         //Reseting node
         endGoal.gCost = 0;
@@ -86,6 +83,8 @@ public class AStar : MonoBehaviour
                     neighbour.hCost = GetDistance(neighbour.GridPosition, endGoal.GridPosition);
                     neighbour.parent = currentNode;
 
+                    neighbour.SetNodeTextCost(neighbour.gCost, neighbour.hCost);
+
                     if (!openList.Contains(neighbour))
                     {
                         openList.Add(neighbour);
@@ -126,6 +125,12 @@ public class AStar : MonoBehaviour
 
     void RetracePath(Node startNode, Node endNode)
     {
+
+        if (startNode == null || endNode == null)
+        {
+            // Handle the case where startNode or endNode is null.
+            return;
+        }
         path = new List<Node>();
         //Retracing backwards
         Node currentNode = endNode;
