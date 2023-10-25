@@ -22,17 +22,22 @@ public class AStar : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Return))
-        {
-            openList.Clear();
-            path.Clear();
-            FindPath(start.position, goal.position);
-        }
+    //    if(Input.GetKeyDown(KeyCode.Return))
+    //    {
+    //        openList.Clear();
+    //        path.Clear();
+    //        FindPath(start.position, goal.position);
+    //    }
     }
-    void FindPath(Vector3 start, Vector3 end)
+    public bool FindPath(Vector3 start, Vector3 end)
     {
+        
         startGoal = grid.GetNode(Vector3Int.FloorToInt(start));
         endGoal = grid.GetNode(Vector3Int.FloorToInt(end));
+
+        //clear previous values
+        openList.Clear();
+        path.Clear();
 
         //color the start and end
         startGoal.gameObject.GetComponent<Renderer>().material.color = Color.blue;
@@ -61,7 +66,7 @@ public class AStar : MonoBehaviour
                 print("Success");
                 RetracePath(startGoal, endGoal);
                 version++;
-                return;
+                return true;
             }
 
             foreach (Node neighbour in GetNeighbours(currentNode))
@@ -92,6 +97,7 @@ public class AStar : MonoBehaviour
                 }
             }
         }
+        return false;
     }
 
     List<Node> GetNeighbours(Node node)
